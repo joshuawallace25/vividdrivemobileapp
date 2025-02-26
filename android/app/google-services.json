@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573635879515",
+    "project_id": "vividdrive-b253f",
+    "storage_bucket": "vividdrive-b253f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573635879515:android:583a34ad8ccee4b7cc957e",
+        "android_client_info": {
+          "package_name": "com.example.vividdrive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOGCBnjU7IwB2W3R_rW6YchwbxNEmuxLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
