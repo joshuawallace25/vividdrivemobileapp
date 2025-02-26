@@ -5,7 +5,6 @@ import 'package:vividdrive/screens/SplashScreen/splashscreen.dart';
 import 'package:vividdrive/screens/auth/forgetpassword.dart';
 import 'package:vividdrive/screens/auth/loginScreen.dart';
 import 'package:vividdrive/screens/auth/signup_screen.dart';
-import 'package:vividdrive/screens/auth/verification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/Signup': (context) =>  SignUpScreen(),
         '/nav': (context) => const Navbar(), // Replace with your home screen
-        '/Verifyscreen': (context) => VerificationScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }

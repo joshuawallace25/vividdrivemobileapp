@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:vividdrive/controller/signup_controller.dart';
 import 'package:vividdrive/screens/auth/widget/curvedpainter.dart';
 
-import 'package:vividdrive/screens/auth/widget/custom_button.dart';
 import 'package:vividdrive/screens/auth/widget/textfield.dart';
 
 

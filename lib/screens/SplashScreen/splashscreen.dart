@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Delay for 3 seconds before navigating to HomeScreen
     Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacementNamed('/Signup');
+      Navigator.of(context).pushReplacementNamed('/login');
     });
   }
 

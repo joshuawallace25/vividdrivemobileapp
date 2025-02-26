@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vividdrive/controller/logincontroller.dart';
 import 'package:vividdrive/screens/auth/widget/curvedpainter.dart';
-
-import 'package:vividdrive/screens/auth/widget/custom_button.dart';
 import 'package:vividdrive/screens/auth/widget/textfield.dart';
+// Import the login controller
 
-/// A stateless widget representing the Login screen.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isPasswordVisible = false; // Track password visibility
+  bool _isPasswordVisible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final LoginController loginController = Get.put(LoginController()); // Create an instance of LoginController
+
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions for responsive layouts
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -28,52 +27,36 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Custom painted curved background
             CustomPaint(
-              size: Size(screenWidth,
-                  screenHeight * 0.3), // Dynamic height based on screen size
+              size: Size(screenWidth, screenHeight * 0.3),
               painter: CurvedPainter(),
             ),
-            // Main content of the form
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal:
-                      screenWidth * 0.05), // 5% padding from left and right
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
               child: SingleChildScrollView(
-                // Ensure scrollability on smaller screens
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Space between top and content
                     SizedBox(height: screenHeight * 0.1),
-
-                    // Login Text
                     Text(
                       'Login',
                       style: TextStyle(
-                        fontSize: screenWidth * 0.08, // Dynamic font size
+                        fontSize: screenWidth * 0.08,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-
-                    // Space between title and text fields
                     SizedBox(height: screenHeight * 0.1),
-
-                    // Form fields
                     CustomTextField(
                       hintText: 'Email',
-                      icon: Icons.email, controller: emailController,
-                      // Increased font size for readability
+                      icon: Icons.email,
+                      controller: emailController,
                     ),
                     const SizedBox(height: 10),
-
-                    // Password TextField with visibility toggle
                     CustomTextField(
                       hintText: 'Password',
                       icon: Icons.lock,
-                      isPassword:
-                          !_isPasswordVisible, // Toggle password visibility
+                      isPassword: !_isPasswordVisible,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
@@ -88,71 +71,52 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       controller: passwordController,
                     ),
-
                     const SizedBox(height: 20),
-
-                    // Remember Me Toggle and Forgot Password
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            // Remember Me Switch
-                            /* Switch(
-                              value: _isRememberMeChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isRememberMeChecked = value;
-                                });
-                              },
-                              activeColor:
-                                  Colors.red, // Red color when toggled on
-                              inactiveThumbColor:
-                                  Colors.white, // White button when off
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Remember Me',
-                              style: TextStyle(fontSize: 16),
-                            ), */
-                          ],
-                        ),
-
-                        // Forgot Password Button
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed('/forgetpassword');
-                          },
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Login Button
-                    CustomButton(
-                      text: 'Login',
-                      onPressed: () {
-                        Get.toNamed('/nav');
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/forgetpassword');
                       },
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                      fontSize: screenWidth * 0.05,
-                      borderRadius: 10,
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-
-                    // Space between buttons
                     const SizedBox(height: 20),
 
-                    // Divider with "or"
+                    // Standard ElevatedButton for login
+                    ElevatedButton(
+                      onPressed: loginController.isLoading.value
+                          ? null // Disable the button while loading
+                          : () async {
+                              await loginController.login(
+                                emailController.text,
+                                passwordController.text,
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.02),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        textStyle: TextStyle(
+                          fontSize: screenWidth * 0.05,
+                        ),
+                      ),
+                      child: loginController.isLoading.value
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                    ),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         const Expanded(child: Divider(thickness: 1)),
@@ -164,10 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    // Google Login Button
-
-                    // Sign Up redirection text
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
