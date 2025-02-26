@@ -2,46 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:vividdrive/screens/AlbumScreen/AlbumdetailsScreen.dart';
 
-class AlbumScreen extends StatelessWidget {
+class AlbumScreen extends StatefulWidget {
   const AlbumScreen({Key? key}) : super(key: key);
 
-  Future<String> _getUserLastName() async {
-    // Get the current user's UID
-    final User? user = FirebaseAuth.instance.currentUser;
+  @override
+  _AlbumScreenState createState() => _AlbumScreenState();
+}
 
+class _AlbumScreenState extends State<AlbumScreen> {
+  List<AssetPathEntity> _albums = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAlbums();
+  }
+
+  Future<void> _fetchAlbums() async {
+    final PermissionState permission = await PhotoManager.requestPermissionExtend();
+    if (permission.isAuth) {
+      List<AssetPathEntity> fetchedAlbums = await PhotoManager.getAssetPathList(type: RequestType.image);
+      setState(() {
+        _albums = fetchedAlbums;
+      });
+    } else {
+      // Show permission error message
+      print("Permission denied");
+    }
+  }
+
+  Future<String> _getUserLastName() async {
+    final User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Fetch user data from Firestore
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get();
 
       if (userDoc.exists) {
-        // Get the full name and extract the last name
         String fullName = userDoc['fullName'] ?? '';
         List<String> nameParts = fullName.split(' ');
-        if (nameParts.length > 1) {
-          return nameParts.last; // Return the last name
-        }
+        return nameParts.length > 1 ? nameParts.last : '';
       }
     }
-    return ''; // Return empty if no data found
+    return '';
   }
 
   @override
   Widget build(BuildContext context) {
-    // Static list of album categories with backup status
-    final List<Map<String, dynamic>> albumCategories = [
-      {'name': 'Screenshots', 'backupEnabled': true},
-      {'name': 'Camera', 'backupEnabled': true},
-      {'name': 'Videos', 'backupEnabled': false},
-      {'name': 'WhatsApp', 'backupEnabled': true},
-      {'name': 'Downloads', 'backupEnabled': false},
-      {'name': 'Favorites', 'backupEnabled': true},
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Album Screen'),
@@ -49,9 +60,8 @@ class AlbumScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
-              // Sign out the user when logout button is pressed
               await FirebaseAuth.instance.signOut();
-              Get.offAllNamed('/login'); // Navigate back to the login screen
+              Get.offAllNamed('/login');
             },
           ),
         ],
@@ -62,14 +72,13 @@ class AlbumScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FutureBuilder<String>(
-              future: _getUserLastName(), // Fetch the last name from Firestore
+              future: _getUserLastName(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Show loading until data is fetched
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  // Display the user's last name
                   return Text(
                     'Hello, ${snapshot.data}! 😊',
                     style: const TextStyle(
@@ -90,41 +99,39 @@ class AlbumScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: albumCategories.length,
-                itemBuilder: (context, index) {
-                  final album = albumCategories[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.folder,
-                        color: Colors.blue.shade700,
-                      ),
-                      title: Text(album['name']),
-                      trailing: Icon(
-                        album['backupEnabled']
-                            ? Icons.cloud_done
-                            : Icons.cloud_off,
-                        color:
-                            album['backupEnabled'] ? Colors.green : Colors.red,
-                      ),
-                      onTap: () {
-                        // Navigate to album details screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AlbumDetailsScreen(
-                              albumName: album['name'],
-                              backupEnabled: album['backupEnabled'],
+              child: _albums.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: _albums.length,
+                      itemBuilder: (context, index) {
+                        final album = _albums[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.folder,
+                              color: Colors.blue.shade700,
                             ),
+                            title: Text(album.name),
+                            trailing: const Icon(
+                              Icons.cloud_done, // You can add backup logic here
+                              color: Colors.green,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AlbumDetailsScreen(
+                                    albumName: album.name,
+                                    backupEnabled: true, // You can modify this based on backup settings
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
