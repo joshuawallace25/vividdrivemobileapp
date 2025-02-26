@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed('/forgetpassword');
+                        Get.toNamed('/login');
                       },
                       child: Text(
                         'Forgot Password?',
@@ -96,17 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 passwordController.text,
                               );
                             },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.blue,
-                        padding: EdgeInsets.symmetric(
-                            vertical: screenHeight * 0.02),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        textStyle: TextStyle(
-                          fontSize: screenWidth * 0.05,
-                        ),
-                      ),
+                      
                       child: loginController.isLoading.value
                           ? CircularProgressIndicator(
                               color: Colors.white,
