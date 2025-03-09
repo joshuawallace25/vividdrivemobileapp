@@ -6,7 +6,6 @@ import 'package:vividdrive/screens/auth/forgetpassword.dart';
 import 'package:vividdrive/screens/auth/loginScreen.dart';
 import 'package:vividdrive/screens/auth/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:vividdrive/screens/auth/verification.dart';
 import 'package:vividdrive/screens/testscreen/testscreen.dart';
 import 'firebase_options.dart';
 
