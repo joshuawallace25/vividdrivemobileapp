@@ -9,6 +9,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -88,6 +89,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Standard ElevatedButton for login
                     ElevatedButton(
+
+                      style:ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black
+                      ),
                       onPressed: loginController.isLoading.value
                           ? null // Disable the button while loading
                           : () async {
