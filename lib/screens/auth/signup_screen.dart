@@ -98,18 +98,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 20),
 
                     // Sign Up Button
-                     Obx(() => ElevatedButton(
-                  onPressed: signUpController.isLoading.value
-                      ? null
-                      : () {
-                          signUpController.signUp(
-                            fullNameController.text.trim(),
-                            emailController.text.trim(),
-                            passwordController.text.trim(),
-                          );
-                        },
-                  child: Text(signUpController.isLoading.value ? 'Signing Up...' : 'Sign Up'),
-                )),
+                   Obx(() => GestureDetector(
+      onTap: signUpController.isLoading.value
+          ? null
+          : () {
+              signUpController.signUp(
+                fullNameController.text.trim(),
+                emailController.text.trim(),
+                passwordController.text.trim(),
+              );
+            },
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        decoration: BoxDecoration(
+          color: signUpController.isLoading.value ? Colors.grey : Colors.black,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          signUpController.isLoading.value ? 'Signing Up...' : 'Sign Up',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    )),
+
                  
 
                     // Space between buttons

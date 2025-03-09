@@ -88,29 +88,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     // Standard ElevatedButton for login
-                    ElevatedButton(
+                   GestureDetector(
+  onTap: loginController.isLoading.value
+      ? null
+      : () async {
+          await loginController.login(
+            emailController.text,
+            passwordController.text,
+          );
+        },
+  child: Container(
+    alignment: Alignment.center,
+    padding: EdgeInsets.symmetric(vertical: 15),
+    decoration: BoxDecoration(
+      color: loginController.isLoading.value ? Colors.grey : Colors.black,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: loginController.isLoading.value
+        ? CircularProgressIndicator(color: Colors.white)
+        : Text(
+            'Login',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+  ),
+),
 
-                      style:ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black
-                      ),
-                      onPressed: loginController.isLoading.value
-                          ? null // Disable the button while loading
-                          : () async {
-                              await loginController.login(
-                                emailController.text,
-                                passwordController.text,
-                              );
-                            },
-                      
-                      child: loginController.isLoading.value
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : Text(
-                              'Login',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                    ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
