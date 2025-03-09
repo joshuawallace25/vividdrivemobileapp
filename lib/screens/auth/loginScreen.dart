@@ -17,7 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final LoginController loginController = Get.put(LoginController()); // Create an instance of LoginController
+  final LoginController loginController =
+      Get.put(LoginController()); // Create an instance of LoginController
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed('/login');
+                        Get.toNamed('/forgetpassword');
                       },
                       child: Text(
                         'Forgot Password?',
@@ -97,20 +98,24 @@ class _LoginScreenState extends State<LoginScreen> {
             passwordController.text,
           );
         },
-  child: Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.symmetric(vertical: 15),
-    decoration: BoxDecoration(
-      color: loginController.isLoading.value ? Colors.grey : Colors.black,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: loginController.isLoading.value
-        ? CircularProgressIndicator(color: Colors.white)
-        : Text(
-            'Login',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-  ),
+  child: Obx(() => Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        decoration: BoxDecoration(
+          color: loginController.isLoading.value ? Colors.grey : Colors.black,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: loginController.isLoading.value
+            ? SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(color: Colors.white),
+              )
+            : Text(
+                'Login',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+      )),
 ),
 
                     const SizedBox(height: 20),

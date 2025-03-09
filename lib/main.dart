@@ -6,6 +6,8 @@ import 'package:vividdrive/screens/auth/forgetpassword.dart';
 import 'package:vividdrive/screens/auth/loginScreen.dart';
 import 'package:vividdrive/screens/auth/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:vividdrive/screens/auth/verification.dart';
+import 'package:vividdrive/screens/testscreen/testscreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -32,8 +34,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/Signup': (context) =>  SignUpScreen(),
-        '/nav': (context) => const Navbar(), // Replace with your home screen
+        '/nav': (context) => const Navbar(), 
         '/login': (context) => LoginScreen(),
+        '/forgetpassword': (context)=> ForgotPasswordScreen(),
+        '/testscreen': (context)=> TestScreen()
       },
     );
   }

@@ -119,6 +119,6 @@ class SignUpController extends GetxController {
     await Future.delayed(Duration(seconds: 2));
 
     // Navigate to the home screen after verification
-    Get.offAllNamed('/nav');
+    Get.offAllNamed('/login');
   }
 }
