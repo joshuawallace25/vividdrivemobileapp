@@ -9,11 +9,8 @@
     
     <!-- Permissions for devices with Android 10 and higher -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" android:required="false" />
-
-    <!-- Optional: Permissions for phone state (if using phone authentication) -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
-   android:requestLegacyExternalStorage="true" 
+    
 
         android:label="Vivid Drive"
         android:name="${applicationName}"
