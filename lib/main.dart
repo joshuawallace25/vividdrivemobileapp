@@ -6,15 +6,16 @@ import 'package:vividdrive/screens/auth/forgetpassword.dart';
 import 'package:vividdrive/screens/auth/loginScreen.dart';
 import 'package:vividdrive/screens/auth/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:vividdrive/screens/testscreen/testscreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensures bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp()); // Now, run the app
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false, // Disable debug banner
+      debugShowCheckedModeBanner: false,
       title: 'Vivid Drive',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -31,12 +32,24 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const SplashScreen(),
-        '/Signup': (context) =>  SignUpScreen(),
-        '/nav': (context) => const Navbar(), 
+        '/': (context) => StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SplashScreen();
+                }
+                if (snapshot.hasData) {
+                  return const Navbar(); // User is signed in
+                } else {
+                  return LoginScreen(); // User is not signed in
+                }
+              },
+            ),
+        '/Signup': (context) => SignUpScreen(),
+        '/nav': (context) => const Navbar(),
         '/login': (context) => LoginScreen(),
-        '/forgetpassword': (context)=> ForgotPasswordScreen(),
-        '/testscreen': (context)=> TestScreen()
+        '/forgetpassword': (context) => ForgotPasswordScreen(),
+        '/testscreen': (context) => TestScreen(),
       },
     );
   }

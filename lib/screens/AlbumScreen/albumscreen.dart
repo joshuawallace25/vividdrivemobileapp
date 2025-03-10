@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:vividdrive/screens/AlbumScreen/AlbumdetailsScreen.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({Key? key}) : super(key: key);
@@ -24,12 +23,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Future<void> _fetchAlbums() async {
     final PermissionState permission = await PhotoManager.requestPermissionExtend();
     if (permission.isAuth) {
-      List<AssetPathEntity> fetchedAlbums = await PhotoManager.getAssetPathList(type: RequestType.image);
+      List<AssetPathEntity> fetchedAlbums = await PhotoManager.getAssetPathList(type: RequestType.all);
       setState(() {
         _albums = fetchedAlbums;
       });
     } else {
-      // Show permission error message
       print("Permission denied");
     }
   }
@@ -55,7 +53,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Album Screen'),
+        title: const Text('Vivid Drive'),
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
@@ -105,30 +103,31 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       itemCount: _albums.length,
                       itemBuilder: (context, index) {
                         final album = _albums[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.folder,
-                              color: Colors.blue.shade700,
-                            ),
-                            title: Text(album.name),
-                            trailing: const Icon(
-                              Icons.cloud_done, // You can add backup logic here
-                              color: Colors.green,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AlbumDetailsScreen(
-                                    albumName: album.name,
-                                    backupEnabled: true, // You can modify this based on backup settings
-                                  ),
+                        return FutureBuilder<int>(
+                          future: album.assetCountAsync,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const CircularProgressIndicator();
+                            }
+                            return Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.folder,
+                                  color: Colors.blue.shade700,
                                 ),
-                              );
-                            },
-                          ),
+                                title: Text(album.name),
+                                subtitle: Text('${snapshot.data} items'),
+                                trailing: const Icon(
+                                  Icons.cloud_done,
+                                  color: Colors.green,
+                                ),
+                                onTap: () {
+                                  // Navigate to album details screen (implement as needed)
+                                },
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

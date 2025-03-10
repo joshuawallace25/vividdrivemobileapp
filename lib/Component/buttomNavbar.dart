@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:vividdrive/screens/AlbumScreen/albumscreen.dart';
+import 'package:vividdrive/screens/testscreen/testscreen.dart';
 
 
 // ignore: must_be_immutable
@@ -15,7 +16,7 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  List Screens = [AlbumScreen()];
+  List Screens = [AlbumScreen(), TestScreen()];
     int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {

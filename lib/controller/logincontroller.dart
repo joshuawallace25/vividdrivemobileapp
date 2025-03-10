@@ -20,7 +20,8 @@ class LoginController extends GetxController {
       // Check if the email is verified
       if (userCredential.user != null && userCredential.user!.emailVerified) {
         // Proceed to the next screen if email is verified
-        Get.offAllNamed('/testscreen');
+        Get.offAllNamed('/nav');
+        // Get.offAllNamed('/testscreen');
       } else {
         // If email is not verified, show an alert and log out the user
         await _auth.signOut();
