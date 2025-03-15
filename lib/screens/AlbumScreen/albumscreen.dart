@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:vividdrive/screens/AlbumScreen/AlbumdetailsScreen.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({Key? key}) : super(key: key);
@@ -104,7 +105,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       itemBuilder: (context, index) {
                         final album = _albums[index];
                         return FutureBuilder<int>(
-                          future: album.assetCountAsync,
+                          future: album.assetCountAsync, // Correct method to fetch asset count
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return const CircularProgressIndicator();
@@ -123,7 +124,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   color: Colors.green,
                                 ),
                                 onTap: () {
-                                  // Navigate to album details screen (implement as needed)
+                                  // Navigate to AlbumDetailScreen
+                                  Get.to(() => AlbumDetailScreen(album: album));
                                 },
                               ),
                             );
